@@ -21,7 +21,6 @@ def send_location(message):
 def get_weather_from_location(message):
     if message.location:
         location = message.location.__dict__
-        logging.info(message.__dict__)
         provider = OpenWeatherMapProvider(os.environ.get('OPEN_WEATHER_MAP_API_KEY'))
         current_weather = provider.get_current_weather(lon=location.get('longitude'), lat=location.get('latitude'))
         weather_info = provider.parse_weather_data(current_weather)
