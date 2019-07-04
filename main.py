@@ -9,19 +9,23 @@ bot = telebot.TeleBot(os.environ.get('TELEGRAM_BOT_TOKEN'))
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
+    logging.info('Greetings msg...')
     bot.reply_to(message, "Howdy, how re you doing?")
 
 
 @bot.message_handler(commands=['get_weather'])
 def send_location(message):
+    logging.info('Request for location...')
     bot.reply_to(message, 'Push the button and send me your current location', reply_markup=get_weather())
 
 
 @bot.message_handler(content_types=["location"])
 def get_weather_from_location(message):
     if message.location:
+        logging.info('Location has been received succesfully...')
         location = message.location.__dict__
         provider = OpenWeatherMapProvider(os.environ.get('OPEN_WEATHER_MAP_API_KEY'))
+        logging.info('Location has been received succesfully...')
         current_weather = provider.get_current_weather(lon=location.get('longitude'), lat=location.get('latitude'))
         weather_info = provider.parse_weather_data(current_weather)
         send_weather_info(info=weather_info, chat_id=message.chat.id)
